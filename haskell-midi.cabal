@@ -1,0 +1,18 @@
+name:                haskell-midi
+version:             0.1.0.0
+license-file:        LICENSE
+author:              Christian Lavoie
+maintainer:          clavoie@sandreckoning.com
+build-type:          Simple
+cabal-version:       >=1.10
+
+executable haskell-midi
+  build-depends:       base >=4.6 && <4.7,
+                       attoparsec,
+                       bytestring,
+                       cereal,
+                       QuickCheck
+  default-language:    Haskell2010
+  hs-source-dirs:      src
+  main-is:             Main.hs
+  ghc-options:         -Wall -Werror
