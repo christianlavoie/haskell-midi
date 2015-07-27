@@ -21,6 +21,18 @@ __DATA__
     <link rel="stylesheet" href="/pure-min.css">
     <script src="/zepto.min.js"></script>
     <script src="/haste.js"></script>
+    <script>
+        function fullscreen() {
+            var w = $(window).width();
+            var h = $(window).height();
+
+            $("#drawArea").css("width", w + "px");
+            $("#drawArea").css("height", h + "px"); 
+        }
+
+        $(window).bind("resize", fullscreen);
+        $(document).bind("ready", fullscreen);
+    </script>
   </head>
   <body>
   <canvas id="drawArea" width="640" height="480"></canvas>

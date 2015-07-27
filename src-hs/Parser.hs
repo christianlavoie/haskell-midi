@@ -1,6 +1,6 @@
 {-# LANGUAGE BangPatterns #-}
 
-module Parser (process) where
+module Parser (message, process) where
 
 import Data.Bits
 import Text.Printf
