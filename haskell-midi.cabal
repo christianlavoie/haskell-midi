@@ -13,7 +13,8 @@ executable haskell-midi
         bytestring,
         cereal,
         QuickCheck,
-        split
+        split,
+        websockets
 
     default-language:
         Haskell2010
