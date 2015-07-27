@@ -8,7 +8,6 @@ cabal-version:       >=1.10
 
 executable haskell-midi
     build-depends:
-        aeson,
         attoparsec,
         base >=4.6 && <4.7,
         bytestring,
@@ -31,13 +30,11 @@ executable haskell-midi
 
 executable checks-encoding
     build-depends:
-        aeson,
         attoparsec,
         base >=4.6 && <4.7,
         bytestring,
         cereal,
         hspec,
-        HUnit,
         QuickCheck,
         quickcheck-assertions
 
