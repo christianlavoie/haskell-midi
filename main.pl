@@ -20,19 +20,7 @@ __DATA__
     <title>Echo</title>
     <link rel="stylesheet" href="/pure-min.css">
     <script src="/zepto.min.js"></script>
-    <script>
-      var ws = new WebSocket('ws://10.0.0.2:30001/ws');
-
-      // Incoming messages
-      ws.onmessage = function (event) {
-        document.body.innerHTML += event.data + '<br/>';
-      };
-
-      // Outgoing messages
-      ws.onopen = function (event) {
-        document.body.innerHTML += 'Socket opened <br/>';
-      };
-    </script>
+    <script src="/haste.js"></script>
   </head>
   <body>
   </body>

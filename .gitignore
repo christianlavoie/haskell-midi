@@ -3,3 +3,7 @@ bin
 cabal.sandbox.config
 dist
 ext
+tmp
+
+*.o
+*.hi
