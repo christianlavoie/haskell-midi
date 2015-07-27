@@ -3,6 +3,8 @@ bin
 cabal.sandbox.config
 dist
 ext
+main
+public/haste.js
 tmp
 
 *.o

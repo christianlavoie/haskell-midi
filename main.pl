@@ -23,5 +23,6 @@ __DATA__
     <script src="/haste.js"></script>
   </head>
   <body>
+  <canvas id="drawArea" width="640" height="480"></canvas>
   </body>
 </html>

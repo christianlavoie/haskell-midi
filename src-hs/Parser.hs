@@ -3,6 +3,7 @@
 module Parser (process) where
 
 import Data.Bits
+import Text.Printf
 
 import qualified Control.Concurrent.Chan as Chan
 import qualified Data.Attoparsec.ByteString as AP
@@ -74,6 +75,10 @@ process chan name handle = do
              bytes <- refill handle
              go $ AP.feed cont bytes
 
+        go (AP.Done bytes (NoteOn w1 w2 w3)) = do
+             Chan.writeChan chan $ printf "%s:%d:%d:%d" name w1 w2 w3
+             go $ AP.parse message bytes
+
         go (AP.Done bytes msg) = do
-             Chan.writeChan chan $ "Done (" ++ name ++ "): " ++ show msg
+             putStrLn $ printf "UI doesn't understand message %s yet" (show msg)
              go $ AP.parse message bytes
