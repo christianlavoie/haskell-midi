@@ -61,17 +61,20 @@ putThreeBytes mask w1 w2 w3 = do
     put w2
     put w3
 
+arbitraryRange :: [Word8] -> QC.Gen Word8
+arbitraryRange = QC.oneof . map return
+
 arbitraryChannel :: QC.Gen Word8
-arbitraryChannel = QC.oneof $ map return [0 .. 15]
+arbitraryChannel = arbitraryRange [0 .. 15]
 
 arbitraryProgram :: QC.Gen Word8
-arbitraryProgram = QC.oneof $ map return [0 .. 127]
+arbitraryProgram = arbitraryRange [0 .. 127]
 
 arbitraryNote :: QC.Gen Word8
-arbitraryNote = QC.oneof $ map return [0 .. 127]
+arbitraryNote = arbitraryRange [0 .. 127]
 
 arbitraryVelocity :: QC.Gen Word8
-arbitraryVelocity = QC.oneof $ map return [0 .. 127]
+arbitraryVelocity = arbitraryRange [0 .. 127]
 
 instance QC.Arbitrary MidiMessage where
     arbitrary = QC.oneof [
