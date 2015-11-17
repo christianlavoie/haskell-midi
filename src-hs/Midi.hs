@@ -1,6 +1,6 @@
 module Midi (MidiMessage(..)) where
 
-import Control.Monad (liftM2, liftM3)
+import Control.Monad (liftM, liftM2, liftM3)
 
 import Data.Bits
 import Data.Word
@@ -40,15 +40,10 @@ instance Serialize MidiMessage where
     put (PitchBendChange w1 w2 w3) = putThreeBytes 0xe0 w1 w2 w3
 
 getTwoBytes :: (Word8 -> Word8 -> MidiMessage) -> Word8 -> Get MidiMessage
-getTwoBytes constructor w1 = do
-    w2 <- get
-    return $ constructor (w1 .&. 0x0f) w2
+getTwoBytes constructor w1 = liftM (constructor $ w1 .&. 0x0f) get
 
 getThreeBytes :: (Word8 -> Word8 -> Word8 -> MidiMessage) -> Word8 -> Get MidiMessage
-getThreeBytes constructor w1 = do
-    w2 <- get
-    w3 <- get
-    return $ constructor (w1 .&. 0x0f) w2 w3
+getThreeBytes constructor w1 = liftM2 (constructor $ w1 .&. 0x0f) get get
 
 putTwoBytes :: Word8 -> Word8 -> Word8 -> PutM ()
 putTwoBytes mask w1 w2 = do
