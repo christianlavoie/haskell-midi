@@ -5,6 +5,8 @@ module Parser (message, process) where
 import Data.Bits
 import Text.Printf
 
+import Control.Monad (liftM, liftM2)
+
 import qualified Control.Concurrent.Chan as Chan
 import qualified Data.Attoparsec.ByteString as AP
 import qualified Data.ByteString as ByteString
@@ -22,45 +24,21 @@ message = AP.choice parsers
             b1 <- AP.satisfy (\b -> b .&. 0xf0 == m)
             return $ b1 .&. 0x0f
 
-        p_note_off = do
-            b1 <- satisfy_four_bits 0x80
-            b2 <- AP.anyWord8
-            b3 <- AP.anyWord8
-            return $ NoteOff b1 b2 b3
+        simple_1_byte first_four constructor = do
+            b1 <- satisfy_four_bits first_four
+            liftM (constructor b1) AP.anyWord8
 
-        p_note_on = do
-            b1 <- satisfy_four_bits 0x90
-            b2 <- AP.anyWord8
-            b3 <- AP.anyWord8
-            return $ NoteOn b1 b2 b3
+        simple_2_bytes first_four constructor = do
+            b1 <- satisfy_four_bits first_four
+            liftM2 (constructor b1) AP.anyWord8 AP.anyWord8
 
-        p_polyphonic_key_pressure = do
-            b1 <- satisfy_four_bits 0xa0
-            b2 <- AP.anyWord8
-            b3 <- AP.anyWord8
-            return $ PolyphonicKeyPressure b1 b2 b3
-
-        p_control_change = do
-            b1 <- satisfy_four_bits 0xb0
-            b2 <- AP.anyWord8
-            b3 <- AP.anyWord8
-            return $ ControlChange b1 b2 b3
-
-        p_program_change = do
-            b1 <- satisfy_four_bits 0xc0
-            b2 <- AP.anyWord8
-            return $ ProgramChange b1 b2
-
-        p_channel_pressure = do
-            b1 <- satisfy_four_bits 0xd0
-            b2 <- AP.anyWord8
-            return $ ChannelPressure b1 b2
-
-        p_pitch_bend_change = do
-            b1 <- satisfy_four_bits 0xe0
-            b2 <- AP.anyWord8
-            b3 <- AP.anyWord8
-            return $ PitchBendChange b1 b2 b3
+        p_note_off                = simple_2_bytes 0x80 NoteOff
+        p_note_on                 = simple_2_bytes 0x90 NoteOn
+        p_polyphonic_key_pressure = simple_2_bytes 0xa0 PolyphonicKeyPressure
+        p_control_change          = simple_2_bytes 0xb0 ControlChange
+        p_program_change          = simple_1_byte  0xc0 ProgramChange
+        p_channel_pressure        = simple_1_byte  0xd0 ChannelPressure
+        p_pitch_bend_change       = simple_2_bytes 0xe0 PitchBendChange
 
 process :: Chan.Chan String -> String -> IO.Handle -> IO ()
 process chan name handle = do
